@@ -12,11 +12,11 @@ BEGIN
 UPDATE Accounts
 SET Balance = Balance + (Balance * 0.01);
 
-```
+
 DBMS_OUTPUT.PUT_LINE('Monthly interest processed successfully');
 
 COMMIT;
-```
+
 
 END;
 /
@@ -77,7 +77,7 @@ UPDATE Accounts
 SET Balance = Balance - p_amount
 WHERE AccountID = p_from_account;
 
-```
+
 UPDATE Accounts
 SET Balance = Balance + p_amount
 WHERE AccountID = p_to_account;
@@ -85,7 +85,7 @@ WHERE AccountID = p_to_account;
 DBMS_OUTPUT.PUT_LINE('Funds transferred successfully');
 
 COMMIT;
-```
+
 
 END;
 /
