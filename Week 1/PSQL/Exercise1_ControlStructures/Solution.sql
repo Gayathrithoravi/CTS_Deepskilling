@@ -33,7 +33,7 @@ BEGIN
 
 END;
 /
-
+SELECT * FROM Loans;
 
 
 BEGIN
@@ -59,7 +59,8 @@ BEGIN
 
 END;
 /
-
+SELECT CustomerID, Name, Balance, IsVIP
+FROM Customers;
 
 
 SET SERVEROUTPUT ON;
