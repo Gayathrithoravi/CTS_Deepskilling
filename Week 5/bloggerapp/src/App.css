@@ -1,0 +1,34 @@
+.container {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 50px;
+}
+
+.column {
+    width: 30%;
+    padding: 20px;
+    border-right: 4px solid green;
+}
+
+.column:last-child {
+    border-right: none;
+}
+
+h2 {
+    font-size: 40px;
+    font-weight: bold;
+}
+
+h3 {
+    font-size: 28px;
+    margin-top: 25px;
+}
+
+h4 {
+    font-size: 20px;
+    margin: 12px 0;
+}
+
+p {
+    color: gray;
+}
