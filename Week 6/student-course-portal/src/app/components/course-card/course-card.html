@@ -54,12 +54,20 @@ Pending
 
 </p>
 
-<button (click)="enroll()">
-Enroll
-</button>
+<button (click)="toggleEnrollment()">
 
-<button (click)="toggleDetails()">
-Show Details
+@if(enrollmentService.isEnrolled(course.id)){
+
+Unenroll
+
+}
+
+@else{
+
+Enroll
+
+}
+
 </button>
 
 @if(isExpanded){

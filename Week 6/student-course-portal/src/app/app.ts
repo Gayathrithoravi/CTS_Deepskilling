@@ -3,17 +3,24 @@ import { RouterOutlet } from '@angular/router';
 
 import { Header } from './components/header/header';
 import { Home } from './pages/home/home';
-import { EnrollmentForm } from './pages/enrollment-form/enrollment-form';
 import { CourseList } from './pages/course-list/course-list';
 import { ReactiveEnrollmentForm } from './pages/reactive-enrollment-form/reactive-enrollment-form';
+import { CourseSummaryWidget } from './components/course-summary-widget/course-summary-widget';
+import { Notification } from './components/notification/notification';
+import { StudentProfile } from './pages/student-profile/student-profile';
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-  RouterOutlet,
-  Header,
-  ReactiveEnrollmentForm
-],
+    RouterOutlet,
+    Header,
+    Home,
+    CourseList,
+    CourseSummaryWidget,
+    ReactiveEnrollmentForm,
+    StudentProfile,
+    Notification
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

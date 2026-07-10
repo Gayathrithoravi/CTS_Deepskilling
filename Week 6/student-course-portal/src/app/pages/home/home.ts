@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CourseService } from '../../services/course';
 
 @Component({
   selector: 'app-home',
@@ -18,18 +19,28 @@ export class Home implements OnInit, OnDestroy {
 
   searchTerm = '';
 
-  availableCourses = 12;
+  availableCourses = 0;
 
-  ngOnInit() {
+  constructor(private courseService: CourseService) {}
+
+  ngOnInit(): void {
+
+    this.availableCourses = this.courseService.getCourses().length;
+
     console.log('HomeComponent initialized — courses loaded');
+
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
+
     console.log('HomeComponent destroyed');
+
   }
 
   onEnrollClick() {
+
     this.message = 'Enrollment opened!';
+
   }
 
 }
