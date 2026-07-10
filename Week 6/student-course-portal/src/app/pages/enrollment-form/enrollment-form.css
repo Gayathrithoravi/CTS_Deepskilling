@@ -1,0 +1,18 @@
+.ng-invalid.ng-touched{
+    border:2px solid red;
+}
+
+.ng-valid.ng-touched{
+    border:2px solid green;
+}
+
+input,select{
+    padding:8px;
+    margin-bottom:8px;
+    width:300px;
+}
+
+button{
+    margin-right:10px;
+    padding:8px 16px;
+}

@@ -1,0 +1,116 @@
+<h2>Student Enrollment Form</h2>
+
+<form #enrollForm="ngForm" (ngSubmit)="onSubmit(enrollForm)">
+
+  <label>Name</label><br>
+
+  <input
+    type="text"
+    name="studentName"
+    [(ngModel)]="studentName"
+    required
+    minlength="3"
+    #nameCtrl="ngModel">
+
+  <br>
+
+  @if(nameCtrl.touched && nameCtrl.errors?.['required']){
+    <span style="color:red;">Name is required</span>
+  }
+
+  @if(nameCtrl.touched && nameCtrl.errors?.['minlength']){
+    <span style="color:red;">Name must be at least 3 characters</span>
+  }
+
+  <br><br>
+
+  <label>Email</label><br>
+
+  <input
+    type="email"
+    name="studentEmail"
+    [(ngModel)]="studentEmail"
+    required
+    email
+    #emailCtrl="ngModel">
+
+  <br>
+
+  @if(emailCtrl.touched && emailCtrl.errors?.['required']){
+    <span style="color:red;">Email is required</span>
+  }
+
+  @if(emailCtrl.touched && emailCtrl.errors?.['email']){
+    <span style="color:red;">Invalid email</span>
+  }
+
+  <br><br>
+
+  <label>Course ID</label><br>
+
+  <input
+    type="number"
+    name="courseId"
+    [(ngModel)]="courseId"
+    required
+    #courseCtrl="ngModel">
+
+  <br>
+
+  @if(courseCtrl.touched && courseCtrl.errors?.['required']){
+    <span style="color:red;">Course ID is required</span>
+  }
+
+  <br><br>
+
+  <label>Preferred Semester</label><br>
+
+  <select
+    name="preferredSemester"
+    [(ngModel)]="preferredSemester"
+    required>
+
+    <option value="">Select</option>
+    <option>Odd</option>
+    <option>Even</option>
+
+  </select>
+
+  <br><br>
+
+  <input
+    type="checkbox"
+    name="agreeToTerms"
+    [(ngModel)]="agreeToTerms"
+    required
+    #termsCtrl="ngModel">
+
+  I agree to Terms
+
+  <br>
+
+  @if(termsCtrl.touched && termsCtrl.errors?.['required']){
+    <span style="color:red;">Accept Terms</span>
+  }
+
+  <br><br>
+
+  <button
+    type="submit"
+    [disabled]="enrollForm.invalid">
+    Submit
+  </button>
+
+  <button
+    type="button"
+    (click)="enrollForm.resetForm()">
+    Reset
+  </button>
+
+</form>
+
+@if(submitted){
+  <h3 style="color:green;">
+    Enrollment request submitted successfully!
+  </h3>
+}
