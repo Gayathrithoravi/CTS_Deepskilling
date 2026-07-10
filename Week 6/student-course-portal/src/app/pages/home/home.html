@@ -1,0 +1,51 @@
+<h1>{{ portalName }}</h1>
+
+<p>
+  Manage your courses, enroll in new courses and track your academic progress.
+</p>
+
+<button
+  [disabled]="!isPortalActive"
+  (click)="onEnrollClick()">
+  Enroll Now
+</button>
+
+<p>{{ message }}</p>
+
+<hr>
+
+<h3>Search Courses</h3>
+
+<input
+  type="text"
+  [(ngModel)]="searchTerm"
+  placeholder="Search Course">
+
+<p>Searching for: {{ searchTerm }}</p>
+
+<hr>
+
+<div class="stats">
+
+    <div class="card">
+        <h3>Courses Available</h3>
+        <p>12</p>
+    </div>
+
+    <div class="card">
+        <h3>Enrolled</h3>
+        <p>3</p>
+    </div>
+
+    <div class="card">
+        <h3>GPA</h3>
+        <p>3.8</p>
+    </div>
+
+</div>
+
+<!--
+[property] is one-way binding (Component → DOM)
+
+[(ngModel)] is two-way binding (Component ↔ DOM)
+-->
