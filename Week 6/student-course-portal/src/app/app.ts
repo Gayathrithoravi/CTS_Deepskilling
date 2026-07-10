@@ -14,12 +14,8 @@ import { StudentProfile } from './pages/student-profile/student-profile';
   imports: [
     RouterOutlet,
     Header,
-    Home,
-    CourseList,
     CourseSummaryWidget,
-    ReactiveEnrollmentForm,
-    StudentProfile,
-    Notification
+     Notification
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'

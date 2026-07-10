@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { CourseCard } from '../../components/course-card/course-card';
 import { CourseService } from '../../services/course';
 import { Course } from '../../models/course.model';
@@ -8,7 +9,7 @@ import { Course } from '../../models/course.model';
 @Component({
   selector: 'app-course-list',
   standalone: true,
-  imports: [CommonModule, CourseCard],
+  imports: [CommonModule, FormsModule, CourseCard],
   templateUrl: './course-list.html',
   styleUrl: './course-list.css'
 })
@@ -20,16 +21,24 @@ export class CourseList implements OnInit {
 
   selectedCourseId: number | null = null;
 
-  constructor(private courseService: CourseService) {}
+  searchTerm = '';
+
+  constructor(
+    private courseService: CourseService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
 
     this.courses = this.courseService.getCourses();
 
+    this.searchTerm =
+      this.route.snapshot.queryParamMap.get('search') ?? '';
+
     setTimeout(() => {
       this.isLoading = false;
     }, 1500);
-
   }
 
   onEnroll(courseId: number) {
@@ -37,7 +46,19 @@ export class CourseList implements OnInit {
     this.selectedCourseId = courseId;
   }
 
-  // trackBy improves performance by re-rendering only changed items.
+  updateSearch() {
+
+    this.router.navigate(
+      ['/courses'],
+      {
+        queryParams: {
+          search: this.searchTerm
+        }
+      }
+    );
+
+  }
+
   trackByCourseId(index: number, course: Course) {
     return course.id;
   }
