@@ -1,0 +1,51 @@
+{
+  "courses": [
+    {
+      "id": "3",
+      "name": "Python (Updated)",
+      "code": "PY301",
+      "credits": 4,
+      "gradeStatus": "failed"
+    },
+    {
+      "id": "4",
+      "name": "Database Systems",
+      "code": "DB401",
+      "credits": 2,
+      "gradeStatus": "passed"
+    },
+    {
+      "id": "5",
+      "name": "Cloud Computing",
+      "code": "CC501",
+      "credits": 5,
+      "gradeStatus": "pending"
+    },
+    {
+      "name": "Gayathri TP",
+      "code": "121",
+      "credits": 3,
+      "gradeStatus": "pending",
+      "enrolled": false,
+      "id": "m8S6TDMpRTI"
+    }
+  ],
+  "students": [
+    {
+      "id": "1",
+      "name": "Gayathri"
+    },
+    {
+      "id": "2",
+      "name": "John"
+    }
+  ],
+  "enrollments": [
+    {
+      "id": "1",
+      "courseId": 1,
+      "studentId": 1
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

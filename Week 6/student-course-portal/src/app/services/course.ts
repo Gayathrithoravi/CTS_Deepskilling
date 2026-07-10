@@ -1,70 +1,81 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
 import { Course } from '../models/course.model';
+import { map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
+import { retry } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+import { of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CourseService {
 
-  private courses: Course[] = [
+  private apiUrl = 'http://localhost:3000/courses';
 
-    {
-      id: 1,
-      name: 'Angular Fundamentals',
-      code: 'ANG101',
-      credits: 4,
-      gradeStatus: 'passed',
-      enrolled: false
-    },
+  constructor(private http: HttpClient) {}
+getCourses(): Observable<Course[]> {
 
-    {
-      id: 2,
-      name: 'Java Programming',
-      code: 'JAVA201',
-      credits: 3,
-      gradeStatus: 'pending',
-      enrolled: false
-    },
+  return this.http.get<Course[]>(this.apiUrl).pipe(
 
-    {
-      id: 3,
-      name: 'Python',
-      code: 'PY301',
-      credits: 4,
-      gradeStatus: 'failed',
-      enrolled: false
-    },
+    map(courses =>
+      courses.filter(c => c.credits > 0)
+    ),
 
-    {
-      id: 4,
-      name: 'Database Systems',
-      code: 'DB401',
-      credits: 2,
-      gradeStatus: 'passed',
-      enrolled: false
-    },
+    tap(courses => {
+      console.log('Courses loaded:', courses.length);
+    }),
 
-    {
-      id: 5,
-      name: 'Cloud Computing',
-      code: 'CC501',
-      credits: 5,
-      gradeStatus: 'pending',
-      enrolled: false
-    }
+    retry(2),
 
-  ];
+    catchError(err => {
 
-  getCourses(): Course[] {
-    return this.courses;
+      console.error(err);
+
+      return throwError(() =>
+        new Error('Failed to load courses.')
+      );
+
+    })
+
+  );
+
+}
+  getCourseById(id: number): Observable<Course> {
+    return this.http.get<Course>(`${this.apiUrl}/${id}`);
+  }
+  loadCourseAndStudents(id: number): Observable<Course> {
+
+  return this.getCourseById(id).pipe(
+
+    switchMap(course => {
+
+      console.log('Selected Course:', course);
+
+      // In a real application, another HTTP request would go here.
+      return of(course);
+
+    })
+
+  );
+
+}
+
+  createCourse(course: Omit<Course, 'id'>): Observable<Course> {
+    return this.http.post<Course>(this.apiUrl, course);
   }
 
-  getCourseById(id: number): Course | undefined {
-    return this.courses.find(c => c.id === id);
+  updateCourse(course: Course): Observable<Course> {
+    return this.http.put<Course>(`${this.apiUrl}/${course.id}`, course);
   }
 
-  addCourse(course: Course) {
-    this.courses.push(course);
+  deleteCourse(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
 }

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+
 import { CourseCard } from '../../components/course-card/course-card';
 import { CourseService } from '../../services/course';
 import { Course } from '../../models/course.model';
@@ -16,11 +17,9 @@ import { Course } from '../../models/course.model';
 export class CourseList implements OnInit {
 
   isLoading = true;
-
+  errorMessage = '';
   courses: Course[] = [];
-
   selectedCourseId: number | null = null;
-
   searchTerm = '';
 
   constructor(
@@ -31,14 +30,27 @@ export class CourseList implements OnInit {
 
   ngOnInit(): void {
 
-    this.courses = this.courseService.getCourses();
-
     this.searchTerm =
       this.route.snapshot.queryParamMap.get('search') ?? '';
 
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 1500);
+    this.courseService.getCourses().subscribe({
+
+      next: (courses) => {
+        this.courses = courses;
+      },
+
+      error: (err) => {
+        this.errorMessage = err.message;
+        alert(err.message);
+        this.isLoading = false;
+      },
+
+      complete: () => {
+        this.isLoading = false;
+      }
+
+    });
+
   }
 
   onEnroll(courseId: number) {
@@ -47,7 +59,6 @@ export class CourseList implements OnInit {
   }
 
   updateSearch() {
-
     this.router.navigate(
       ['/courses'],
       {
@@ -56,7 +67,6 @@ export class CourseList implements OnInit {
         }
       }
     );
-
   }
 
   trackByCourseId(index: number, course: Course) {

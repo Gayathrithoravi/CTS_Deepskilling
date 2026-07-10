@@ -1,5 +1,10 @@
 <app-header></app-header>
 
 <hr>
+@if (loadingService.isLoading$ | async) {
+  <div class="loading">
+    Loading...
+  </div>
+}
 
 <router-outlet></router-outlet>

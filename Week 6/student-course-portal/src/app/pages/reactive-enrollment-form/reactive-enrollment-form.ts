@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Course } from '../../models/course.model';
+import { CourseService } from '../../services/course';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -23,7 +25,10 @@ export class ReactiveEnrollmentForm implements OnInit {
 
   enrollForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+  private fb: FormBuilder,
+  private courseService: CourseService
+) {}
 
   ngOnInit(): void {
 
@@ -65,14 +70,44 @@ export class ReactiveEnrollmentForm implements OnInit {
   // getRawValue() includes disabled controls
 
  onSubmit() {
-  alert("Submit clicked!");
 
-  console.log("Submit clicked");
-  console.log(this.enrollForm.value);
-  console.log(this.enrollForm.getRawValue());
-
+  if (this.enrollForm.invalid) {
+    return;
   }
 
+  const form = this.enrollForm.value;
+
+  const newCourse: Omit<Course, 'id'> = {
+  name: form.studentName,
+  code: form.courseId,
+  credits: 3,
+  gradeStatus: 'pending',
+  enrolled: false
+};
+
+  this.courseService.createCourse(newCourse).subscribe({
+
+    next: (course) => {
+
+      console.log('Course Created');
+
+      console.log(course);
+
+      alert('Course added successfully!');
+
+      this.enrollForm.reset();
+
+    },
+
+    error: (err) => {
+
+      console.error(err);
+
+    }
+
+  });
+
+}
   noCourseCode(control: AbstractControl): ValidationErrors | null {
 
     if (

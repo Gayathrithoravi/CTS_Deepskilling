@@ -14,6 +14,8 @@ import { CreditLabelPipe } from '../../pipes/credit-label-pipe';
 import { EnrollmentService } from '../../services/enrollment';
 
 import { Course } from '../../models/course.model';
+import { CourseService } from '../../services/course';
+
 
 @Component({
   selector: 'app-course-card',
@@ -28,8 +30,10 @@ export class CourseCard implements OnChanges {
 
   @Output() enrollRequested = new EventEmitter<number>();
 
-  constructor(public enrollmentService: EnrollmentService) {}
-
+ constructor(
+  public enrollmentService: EnrollmentService,
+  private courseService: CourseService
+) {}
   isExpanded = false;
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -43,6 +47,41 @@ export class CourseCard implements OnChanges {
   toggleDetails() {
     this.isExpanded = !this.isExpanded;
   }
+  updateCourse() {
+
+  const updated: Course = {
+
+    ...this.course,
+
+    name: this.course.name + ' (Updated)'
+
+  };
+
+  this.courseService.updateCourse(updated).subscribe({
+
+    next: () => {
+
+      alert('Course Updated');
+
+    }
+
+  });
+
+}
+
+deleteCourse() {
+
+  this.courseService.deleteCourse(this.course.id).subscribe({
+
+    next: () => {
+
+      alert('Course Deleted');
+
+    }
+
+  });
+
+}
 
   toggleEnrollment() {
 
