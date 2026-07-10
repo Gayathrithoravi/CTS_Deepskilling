@@ -1,0 +1,32 @@
+input,
+select{
+
+display:block;
+
+margin:10px 0;
+
+padding:8px;
+
+width:300px;
+
+}
+
+button{
+
+margin-top:10px;
+
+margin-right:10px;
+
+}
+
+.ng-invalid.ng-touched{
+
+border:2px solid red;
+
+}
+
+.ng-valid.ng-touched{
+
+border:2px solid green;
+
+}
