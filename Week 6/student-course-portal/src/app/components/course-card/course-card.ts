@@ -8,19 +8,34 @@ import {
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
+import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
+import { Store } from '@ngrx/store';
+
+import { Highlight } from '../../directives/highlight';
 import { CreditLabelPipe } from '../../pipes/credit-label-pipe';
-
-import { EnrollmentService } from '../../services/enrollment';
 
 import { Course } from '../../models/course.model';
 import { CourseService } from '../../services/course';
 
+import {
+  enrollInCourse,
+  unenrollFromCourse
+} from '../../store/enrollment/enrollment.actions';
+
+import {
+  selectEnrolledIds
+} from '../../store/enrollment/enrollment.selectors';
 
 @Component({
   selector: 'app-course-card',
   standalone: true,
-  imports: [CommonModule, CreditLabelPipe],
+  imports: [
+    CommonModule,
+    CreditLabelPipe,
+    Highlight
+  ],
   templateUrl: './course-card.html',
   styleUrl: './course-card.css'
 })
@@ -30,11 +45,16 @@ export class CourseCard implements OnChanges {
 
   @Output() enrollRequested = new EventEmitter<number>();
 
- constructor(
-  public enrollmentService: EnrollmentService,
-  private courseService: CourseService
-) {}
+  enrolledIds$!: Observable<number[]>;
+
   isExpanded = false;
+
+  constructor(
+    private courseService: CourseService,
+    private store: Store
+  ) {
+    this.enrolledIds$ = this.store.select(selectEnrolledIds);
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log(changes['course']);
@@ -47,64 +67,66 @@ export class CourseCard implements OnChanges {
   toggleDetails() {
     this.isExpanded = !this.isExpanded;
   }
-  updateCourse() {
-
-  const updated: Course = {
-
-    ...this.course,
-
-    name: this.course.name + ' (Updated)'
-
-  };
-
-  this.courseService.updateCourse(updated).subscribe({
-
-    next: () => {
-
-      alert('Course Updated');
-
-    }
-
-  });
-
-}
-
-deleteCourse() {
-
-  this.courseService.deleteCourse(this.course.id).subscribe({
-
-    next: () => {
-
-      alert('Course Deleted');
-
-    }
-
-  });
-
-}
 
   toggleEnrollment() {
 
-    if (this.enrollmentService.isEnrolled(this.course.id)) {
+    this.enrolledIds$
+      .pipe(take(1))
+      .subscribe(ids => {
 
-      this.enrollmentService.unenroll(this.course.id);
+        if (ids.includes(this.course.id)) {
 
-    } else {
+          this.store.dispatch(
+            unenrollFromCourse({
+              courseId: this.course.id
+            })
+          );
 
-      this.enrollmentService.enroll(this.course.id);
+        } else {
 
-    }
+          this.store.dispatch(
+            enrollInCourse({
+              courseId: this.course.id
+            })
+          );
+
+        }
+
+      });
 
   }
 
-  get cardClasses() {
-    return {
-      'card--enrolled': this.course.enrolled,
-      'card--full': this.course.credits >= 4,
-      'expanded': this.isExpanded
+  updateCourse() {
+
+    const updated: Course = {
+      ...this.course,
+      name: this.course.name + ' (Updated)'
     };
+
+    this.courseService.updateCourse(updated).subscribe({
+      next: () => {
+        alert('Course Updated');
+      }
+    });
+
   }
 
+  deleteCourse() {
+
+    this.courseService.deleteCourse(this.course.id).subscribe({
+      next: () => {
+        alert('Course Deleted');
+      }
+    });
+
+  }
+
+ get cardClasses() {
+  return {
+    'card--full': this.course.credits >= 4,
+    'expanded': this.isExpanded
+  };
+}
   get borderColor() {
 
     switch (this.course.gradeStatus) {
@@ -117,6 +139,7 @@ deleteCourse() {
 
       default:
         return 'gray';
+
     }
 
   }

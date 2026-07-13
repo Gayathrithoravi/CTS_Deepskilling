@@ -56,17 +56,11 @@ Pending
 
 <button (click)="toggleEnrollment()">
 
-@if(enrollmentService.isEnrolled(course.id)){
-
-Unenroll
-
-}
-
-@else{
-
-Enroll
-
-}
+  @if ((enrolledIds$ | async)?.includes(course.id)) {
+    Unenroll
+  } @else {
+    Enroll
+  }
 
 </button>
 

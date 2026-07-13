@@ -6,7 +6,16 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { CourseCard } from '../../components/course-card/course-card';
 import { CourseService } from '../../services/course';
 import { Course } from '../../models/course.model';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
+import {
+  loadCourses
+} from '../../store/course/course.actions';
+
+import {
+  selectAllCourses
+} from '../../store/course/course.selectors';
 @Component({
   selector: 'app-course-list',
   standalone: true,
@@ -19,38 +28,25 @@ export class CourseList implements OnInit {
   isLoading = true;
   errorMessage = '';
   courses: Course[] = [];
+  courses$!: Observable<Course[]>;
   selectedCourseId: number | null = null;
   searchTerm = '';
 
-  constructor(
-    private courseService: CourseService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
+ constructor(
+  private courseService: CourseService,
+  private router: Router,
+  private route: ActivatedRoute,
+  private store: Store
+) {}
 
   ngOnInit(): void {
 
     this.searchTerm =
       this.route.snapshot.queryParamMap.get('search') ?? '';
 
-    this.courseService.getCourses().subscribe({
+    this.courses$ = this.store.select(selectAllCourses);
 
-      next: (courses) => {
-        this.courses = courses;
-      },
-
-      error: (err) => {
-        this.errorMessage = err.message;
-        alert(err.message);
-        this.isLoading = false;
-      },
-
-      complete: () => {
-        this.isLoading = false;
-      }
-
-    });
-
+this.store.dispatch(loadCourses());
   }
 
   onEnroll(courseId: number) {
