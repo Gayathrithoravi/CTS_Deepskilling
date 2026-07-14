@@ -30,7 +30,7 @@ export const appConfig: ApplicationConfig = {
     }),
     provideStore({}),
 provideState('course', courseReducer),
-provideState('enrollment', enrollmentReducer),
+
 provideEffects(CourseEffects),
 provideStoreDevtools({
   maxAge: 25,
